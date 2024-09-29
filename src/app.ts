@@ -1,4 +1,4 @@
-import { WebSocketServer } from 'ws';
+import { WebSocketServer, WebSocket } from 'ws';
 
 const wss = new WebSocketServer({ port: 3000 });
 
@@ -11,7 +11,11 @@ wss.on('connection', function connection(ws) {
       payload: data.toString(),
       type: "message"
     })
-    ws.send(payload);
+    wss.clients.forEach(function each(client) {
+      if (client !== ws && client.readyState === WebSocket.OPEN) {
+        client.send(payload, { binary: isBinary });
+      }
+    });
   });
 
   //ws.send('Hola desde el servidor');
