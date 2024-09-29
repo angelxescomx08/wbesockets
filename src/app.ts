@@ -7,7 +7,12 @@ wss.on('connection', function connection(ws) {
 
   ws.on('message', function message(data, isBinary) {
     console.log('received: %s', data);
+    const payload = JSON.stringify({
+      payload: data.toString(),
+      type: "message"
+    })
+    ws.send(payload);
   });
 
-  ws.send('Hola desde el servidor');
+  //ws.send('Hola desde el servidor');
 });
